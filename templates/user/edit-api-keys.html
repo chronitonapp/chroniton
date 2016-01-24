@@ -1,0 +1,96 @@
+<div class="container">
+
+    <div class="row wrapper border-bottom page-heading">
+        <div class="col-lg-10">
+            <h2>Edit User Info</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="">Edit Settings</a>
+                </li>
+                <li class="active">
+                    <strong>User Info</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class='col-md-3'>
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h3>Menu</h3>
+                </div>
+                <div class="ibox-content no-padding">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href='/settings/edit'>
+                                <h3>Info</h3>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href='/settings/edit/configurations'>
+                                <h3>Configurations</h3>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href='/settings/edit/api-keys'>
+                                <h3>API Keys</h3>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href='/settings/edit/integrations'>
+                                <h3>Integrations</h3>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href='/settings/edit/security'>
+                                <h3>Security</h3>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class='col-md-9'>
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Edit API Keys</sh5>
+                </div>
+                <div class="ibox-content">
+                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
+                        <form method="post" action="/users/update" class="form-horizontal">
+                            <div class="form-group"><label class="col-sm-3 control-label">WakaTime API Key:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="wakaTimeApiKey" class="form-control" value='{{.WakaTimeApiKey}}' placeholder="Place your wakatime API key here">
+                                    {{if .IsSyncingWakaTime}}
+                                        <br>
+                                        <i class='fa fa-spinner fa-spin'></i><span> Syncing with WakaTime...</span>
+                                    {{else if (ne (len .WakaTimeApiKey) 0)}}
+                                        <br>
+                                        <span>Last Sync: <strong>{{.LastWakaTimeSync}}</strong></span>
+                                    {{end}}
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-8">
+                                    <button class="btn btn-white" type="submit">Cancel</button>
+                                    <button class="btn btn-primary" type="submit">Save changes</button>
+                                </div>
+                            </div>
+                            <input type='hidden' value='{{.Id}}' name='id'>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
