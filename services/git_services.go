@@ -4,4 +4,6 @@ type gitService interface {
 	HandleWebhookEvent(payload []byte)
 }
 
-var registeredGitServices = map[string]gitService{}
+var registeredGitServices = map[string]gitService{
+	"github": NewGithubIntegration(),
+}

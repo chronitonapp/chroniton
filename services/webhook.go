@@ -18,7 +18,7 @@ import (
 type WebhookService struct{}
 
 func (ws WebhookService) Register(router martini.Router) {
-	router.Post("/webhooks/:git_service", ws.Handle)
+	router.Post("/webhook/:git_service", ws.Handle)
 }
 
 func (ws WebhookService) Handle(r render.Render, req *http.Request, params martini.Params) {

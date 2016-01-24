@@ -37,6 +37,9 @@ func (u User) PullNewestHeartbeats() {
 		u.LastWakaTimeSync = *wtUser.CreatedAt
 	}
 
+	u.IsSyncingWakaTime = true
+	utils.ORM.Save(&u)
+
 	current := wtUser.LastHeartbeat
 	daysToSync := int(math.Min(7, math.Ceil(current.Sub(u.LastWakaTimeSync).Hours()/float64(24))))
 

@@ -75,7 +75,7 @@
                                         <i class='fa fa-spinner fa-spin'></i><span> Syncing with WakaTime...</span>
                                     {{else if (ne (len .WakaTimeApiKey) 0)}}
                                         <br>
-                                        <span>Last Sync: <strong>{{.LastWakaTimeSync}}</strong></span>
+                                        <span>Last Sync: <strong>{{.LastWakaTimeSync}}</strong></span> <span><a href="/wakatime/sync">(sync now)</a></span>
                                     {{end}}
                                 </div>
                             </div>

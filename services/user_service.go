@@ -31,6 +31,7 @@ func (us UserService) Register(router martini.Router) {
 	router.Get("/dashboard", EnsureAuth, us.Dashboard)
 	router.Get("/settings/edit", EnsureAuth, us.Edit)
 	router.Get("/settings/edit/:category", EnsureAuth, us.Edit)
+	router.Get("/wakatime/sync", EnsureAuth, us.SyncHeartbeats)
 }
 
 func (us UserService) SignUp(r render.Render) {
@@ -100,19 +101,32 @@ func (us UserService) Update(user models.User, req *http.Request, r render.Rende
 		r.HTML(403, "user/edit", nil)
 		return
 	}
-	utils.ORM.First(&user, user.Id)
+	var curUser models.User
+	utils.ORM.First(&curUser, user.Id)
 
-	if oldUser.WakaTimeApiKey != user.WakaTimeApiKey && user.WakaTimeApiKey != "" {
+	if oldUser.WakaTimeApiKey != curUser.WakaTimeApiKey && curUser.WakaTimeApiKey != "" {
 		utils.Log.Debug("Pulling down wakatime heartbeats")
-		user.IsSyncingWakaTime = true
-		utils.ORM.Save(&user)
-		go user.PullNewestHeartbeats()
+		curUser.IsSyncingWakaTime = true
+		utils.ORM.Save(&curUser)
+		go curUser.PullNewestHeartbeats()
 	}
 
 	if strings.Contains(req.Referer(), "/settings/edit") {
 		r.Redirect(req.Referer())
 	} else {
 		r.Redirect("/settings/edit")
+	}
+}
+
+func (us UserService) SyncHeartbeats(currentUser models.User, r render.Render, req *http.Request) {
+	currentUser.IsSyncingWakaTime = true
+	utils.ORM.Save(&currentUser)
+	go currentUser.PullNewestHeartbeats()
+
+	if req.Referer() != "" {
+		r.Redirect(req.Referer())
+	} else {
+		r.Redirect("/dashboard")
 	}
 }
 

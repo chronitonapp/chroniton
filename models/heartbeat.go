@@ -31,6 +31,7 @@ func NewHeartbeatFromWakaTime(heartbeat wakatime.Heartbeat) Heartbeat {
 		IsWrite:     heartbeat.IsWrite,
 		Language:    heartbeat.Language,
 		Type:        heartbeat.Type,
+		Time:        time.Time(*heartbeat.Time),
 	}
 }
 
@@ -42,4 +43,24 @@ func SaveHeartbeatIfNotExist(heartbeat Heartbeat) bool {
 		return true
 	}
 	return false
+}
+
+func CalcTotalHeartbeatsDuration(user User, heartbeats []Heartbeat) int64 {
+	duration := int64(0)
+	var lastHeartbeat Heartbeat
+	var curHeartbeat Heartbeat
+
+	lastHeartbeat = heartbeats[0]
+	for i := 1; i <= len(heartbeats)-1; i++ {
+		curHeartbeat = heartbeats[i]
+		utils.Log.Debug("cur: %v, last: %v", curHeartbeat.Time.Unix(), lastHeartbeat.Time.Unix())
+		t := curHeartbeat.Time.Unix() - lastHeartbeat.Time.Unix()
+		lastHeartbeat = curHeartbeat
+		if t >= 60*15 { /* 15 minutes */
+			continue
+		}
+		duration += t
+	}
+
+	return duration
 }
