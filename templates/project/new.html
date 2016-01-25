@@ -1,0 +1,79 @@
+<div class="container">
+
+    <div class="row wrapper border-bottom page-heading">
+        <div class="col-lg-10">
+            <h2>Create New Project</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/projects">Project</a>
+                </li>
+                <li class="active">
+                    <strong>New</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class='col-md-10 col-md-offset-1'>
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>New Project</sh5>
+                </div>
+                <div class="ibox-content">
+                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
+                        <form method="post" action="/projects" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Project Name:</label>
+                                <div class="col-sm-9">
+                                    <input required type="text" name="wakaTimeApiKey" class="form-control" value='' placeholder="Place your wakatime API key here">
+                                    <span class="help-block m-b-none">Must match project name reported by wakatime!</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Full Repo Name:</label>
+                                <div class="col-sm-9">
+                                    <input required type="text" name="wakaTimeApiKey" class="form-control" value='' placeholder="owner/repo">
+                                    <span class="help-block m-b-none">Must be of format owner/repo</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Git Platform:</label>
+                                <div class="col-sm-9">
+                                    <select required class="form-control m-b" name="account">
+                                        <option></option>
+                                        <option>Github</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Project Management:</label>
+                                <div class="col-sm-9">
+                                    <select required class="form-control m-b" name="account">
+                                        <option></option>
+                                        <option>Axosoft</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-3 col-sm-offset-9">
+                                    <button class="btn btn-white" type="submit">Cancel</button>
+                                    <button class="btn btn-primary" type="submit">Create</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
