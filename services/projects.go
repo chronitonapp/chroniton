@@ -3,6 +3,7 @@ package services
 import (
 	// "net/http"
 	// "strings"
+	"fmt"
 	//"time"
 
 	"github.com/gophergala2016/chroniton/models"
@@ -28,10 +29,12 @@ func (ps ProjectService) New(r render.Render) {
 	r.HTML(200, "project/new", nil)
 }
 
-func (ps ProjectService) Create(projet models.Project, r render.Render) {
-	err := utils.ORM.Save(&projet).Error
+func (ps ProjectService) Create(currentUser models.User, project models.Project, r render.Render) {
+	project.UserId = currentUser.Id
+	err := utils.ORM.Save(&project).Error
 	if err != nil {
 		utils.Log.Error("Failed to create project: %v", err)
-		r.HTML(403, "project/new", projet)
+		r.HTML(403, "project/new", project)
 	}
+	r.Redirect(fmt.Sprintf("projects/%v", project.Id))
 }

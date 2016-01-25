@@ -34,32 +34,32 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Project Name:</label>
                                 <div class="col-sm-9">
-                                    <input required type="text" name="wakaTimeApiKey" class="form-control" value='' placeholder="Place your wakatime API key here">
+                                    <input required type="text" name="name" class="form-control" value='' placeholder="Project Name">
                                     <span class="help-block m-b-none">Must match project name reported by wakatime!</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Full Repo Name:</label>
                                 <div class="col-sm-9">
-                                    <input required type="text" name="wakaTimeApiKey" class="form-control" value='' placeholder="owner/repo">
+                                    <input required type="text" name="gitRepoName" class="form-control" value='' placeholder="owner/repo">
                                     <span class="help-block m-b-none">Must be of format owner/repo</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Git Platform:</label>
                                 <div class="col-sm-9">
-                                    <select required class="form-control m-b" name="account">
+                                    <select required class="form-control m-b" name="gitIntegrationName">
                                         <option></option>
-                                        <option>Github</option>
+                                        <option value='github'>Github</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Project Management:</label>
                                 <div class="col-sm-9">
-                                    <select required class="form-control m-b" name="account">
+                                    <select required class="form-control m-b" name="pmIntegrationName">
                                         <option></option>
-                                        <option>Axosoft</option>
+                                        <option value='axosoft'>Axosoft</option>
                                     </select>
                                 </div>
                             </div>
