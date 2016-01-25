@@ -29,8 +29,8 @@ func (us UserService) Register(router martini.Router) {
 	router.Get("/signup", PreventReauth, us.SignUp)
 	router.Get("/signin", PreventReauth, us.SignIn)
 	router.Get("/dashboard", EnsureAuth, us.Dashboard)
-	router.Get("/settings/edit", EnsureAuth, us.Edit)
-	router.Get("/settings/edit/:category", EnsureAuth, us.Edit)
+	router.Get("/settings", EnsureAuth, us.Edit)
+	router.Get("/settings/:category", EnsureAuth, us.Edit)
 	router.Get("/wakatime/sync", EnsureAuth, us.SyncHeartbeats)
 }
 
@@ -111,10 +111,10 @@ func (us UserService) Update(user models.User, req *http.Request, r render.Rende
 		go curUser.PullNewestHeartbeats()
 	}
 
-	if strings.Contains(req.Referer(), "/settings/edit") {
+	if strings.Contains(req.Referer(), "/settings") {
 		r.Redirect(req.Referer())
 	} else {
-		r.Redirect("/settings/edit")
+		r.Redirect("/settings")
 	}
 }
 
