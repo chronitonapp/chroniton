@@ -5,11 +5,12 @@ import (
 )
 
 type Project struct {
-	Id                 int64
-	UserId             int64
-	Name               string
-	GitIntegrationName string
-	GitRepoName        string
-	PmIntegrationName  string
-	CreatedAt          time.Time
+	Id                  int64
+	UserId              int64
+	Name                string
+	GitIntegrationName  string
+	GitRepoName         string
+	PmIntegrationName   string
+	NumRecievedWebhooks int
+	CreatedAt           time.Time
 }

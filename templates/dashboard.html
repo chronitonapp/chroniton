@@ -22,26 +22,23 @@
                 <div class="col-md-2">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <span class="label label-success pull-right">Monthly</span>
-                            <h5>Views</h5>
+                            <h5>Projects</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">386,200</h1>
-                            <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-                            <small>Total views</small>
+                            <h1 class="no-margins">{{len .Projects}}</h1>
+                            <small>Total projects</small>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <span class="label label-info pull-right">Annual</span>
-                            <h5>Orders</h5>
+                            <h5>Push Events</h5>
                         </div>
                         <div class="ibox-content">
-                                    <h1 class="no-margins">80,800</h1>
+                                    <h1 class="no-margins">{{.NumReceivedPushes}}</h1>
                                     <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
-                                    <small>New orders</small>
+                                    <small>Recieved Events</small>
                         </div>
                     </div>
                 </div>
@@ -49,19 +46,35 @@
                 <div class="col-md-4">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <span class="label label-primary pull-right">Today</span>
-                            <h5>Vistits</h5>
+                            {{if (ne (len .Heartbeats) 0)}}
+                                <span class="label label-primary pull-right">{{(index .Heartbeats 0).HumanTime}}</span>
+                            {{else}}
+                                <span class="label label-error pull-right">None</span>
+                            {{end}}
+                            <h5>Last Heartbeat</h5>
                         </div>
                         <div class="ibox-content">
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h1 class="no-margins">$ 406,420</h1>
-                                    <div class="font-bold text-navy">44% <i class="fa fa-level-up"></i> <small>Rapid pace</small></div>
+                                    <h4 class="no-margins">
+                                        {{if (ne (len .Heartbeats) 0)}}
+                                            {{(index .Heartbeats 0).Project}}
+                                        {{else}}
+                                            N/A
+                                        {{end}}
+                                    </h4>
+                                    <div class="font-bold text-navy">Project</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <h1 class="no-margins">206,120</h1>
-                                    <div class="font-bold text-navy">22% <i class="fa fa-level-up"></i> <small>Slow pace</small></div>
+                                    <h4 class="no-margins">
+                                        {{if (ne (len .Heartbeats) 0)}}
+                                            {{(index .Heartbeats 0).Branch}}
+                                        {{else}}
+                                            N/A
+                                        {{end}}
+                                    </h4>
+                                    <div class="font-bold text-navy">Branch</div>
                                 </div>
                             </div>
 
@@ -149,21 +162,21 @@
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
                                 <span class="label label-warning pull-right">Data has changed</span>
-                                <h5>User activity</h5>
+                                <h5>Top Languages</h5>
                             </div>
                             <div class="ibox-content">
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <small class="stats-label">Pages / Visit</small>
-                                        <h4>236 321.80</h4>
+                                        <small class="stats-label">Language</small>
+                                        <h4>Markdown</h4>
                                     </div>
 
                                     <div class="col-xs-4">
-                                        <small class="stats-label">% New Visits</small>
+                                        <small class="stats-label">% of Usage</small>
                                         <h4>46.11%</h4>
                                     </div>
                                     <div class="col-xs-4">
-                                        <small class="stats-label">Last week</small>
+                                        <small class="stats-label"># of Heartbeats</small>
                                         <h4>432.021</h4>
                                     </div>
                                 </div>

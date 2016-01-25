@@ -130,6 +130,6 @@ func (us UserService) SyncHeartbeats(currentUser models.User, r render.Render, r
 	}
 }
 
-func (us UserService) Dashboard(r render.Render) {
-	r.HTML(200, "dashboard", nil)
+func (us UserService) Dashboard(current_user models.User, r render.Render) {
+	r.HTML(200, "dashboard", current_user)
 }

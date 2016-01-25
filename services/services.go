@@ -11,4 +11,5 @@ type Service interface {
 var Services []Service = []Service{
 	new(UserService),
 	new(WebhookService),
+	new(ProjectService),
 }

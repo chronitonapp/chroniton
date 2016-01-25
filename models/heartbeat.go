@@ -5,6 +5,7 @@ import (
 
 	"github.com/gophergala2016/chroniton/utils"
 
+	"github.com/dustin/go-humanize"
 	wakatime "github.com/jsimnz/go.wakatime"
 )
 
@@ -45,6 +46,10 @@ func SaveHeartbeatIfNotExist(heartbeat Heartbeat) bool {
 	return false
 }
 
+func (h Heartbeat) HumanTime() string {
+	return humanize.Time(h.Time)
+}
+
 func CalcTotalHeartbeatsDuration(user User, heartbeats []Heartbeat) int64 {
 	duration := int64(0)
 	var lastHeartbeat Heartbeat
@@ -53,7 +58,6 @@ func CalcTotalHeartbeatsDuration(user User, heartbeats []Heartbeat) int64 {
 	lastHeartbeat = heartbeats[0]
 	for i := 1; i <= len(heartbeats)-1; i++ {
 		curHeartbeat = heartbeats[i]
-		utils.Log.Debug("cur: %v, last: %v", curHeartbeat.Time.Unix(), lastHeartbeat.Time.Unix())
 		t := curHeartbeat.Time.Unix() - lastHeartbeat.Time.Unix()
 		lastHeartbeat = curHeartbeat
 		if t >= 60*15 { /* 15 minutes */

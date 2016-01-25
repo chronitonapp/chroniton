@@ -43,6 +43,7 @@ func (g GithubIntegration) HandleWebhookEvent(payload []byte) {
 		utils.Log.Error("Project %v git integration (%v) doesn't match current one (github", project.Name, project.GitIntegrationName)
 		return
 	}
+	utils.ORM.Exec("update projects set num_recieved_webhooks=num_recieved_webhooks+1 where id = ?", project.Id)
 
 	var user models.User
 	err = utils.ORM.First(&user, project.UserId).Error

@@ -69,3 +69,23 @@ func (u User) PullNewestHeartbeats() {
 	u.IsSyncingWakaTime = false
 	utils.ORM.Save(&u)
 }
+
+func (u User) Projects() []Project {
+	var projects []Project
+	utils.ORM.Where("user_id = ?", u.Id).Find(&projects)
+	return projects
+}
+
+func (u User) NumReceivedPushes() int {
+	count := 0
+	row := utils.ORM.Table("projects").Where("user_id = ?", u.Id).Select("sum(num_recieved_webhooks)").Row()
+	row.Scan(&count)
+	return count
+}
+
+func (u User) Heartbeats() []Heartbeat {
+	var heartbeats []Heartbeat
+	utils.ORM.Table("heartbeats").Joins("JOIN projects ON projects.name = heartbeats.project JOIN users ON projects.user_id = users.id").
+		Order("heartbeats.time DESC").Find(&heartbeats)
+	return heartbeats
+}

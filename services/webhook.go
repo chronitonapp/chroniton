@@ -25,6 +25,7 @@ func (ws WebhookService) Handle(r render.Render, req *http.Request, params marti
 	gitServiceStr := params["git_service"]
 	gitService, exists := registeredGitServices[gitServiceStr]
 	if !exists {
+		utils.Log.Warning("No git integration found for recieved webhook %v", gitServiceStr)
 		r.Status(200)
 		return
 	}
