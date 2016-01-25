@@ -10,7 +10,8 @@ import (
 )
 
 type Heartbeat struct {
-	Id          int64  // Database ID
+	Id          int64 // Database ID
+	UserId      int64
 	Project     string // Associated project on Wakatime (git project)
 	Branch      string // Git branch
 	Entity      string

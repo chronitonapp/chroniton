@@ -1,7 +1,10 @@
 package models
 
 import (
+	"fmt"
 	"math"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gophergala2016/chroniton/utils"
@@ -60,6 +63,7 @@ func (u User) PullNewestHeartbeats() {
 		for _, heartbeat := range heartbeats {
 			utils.Log.Debug("heartbeat from wakatime: %v", heartbeat)
 			hb := NewHeartbeatFromWakaTime(heartbeat)
+			hb.UserId = u.Id
 			utils.Log.Debug("heartbeat formatted: %v", hb)
 			SaveHeartbeatIfNotExist(hb)
 		}
@@ -88,4 +92,113 @@ func (u User) Heartbeats() []Heartbeat {
 	utils.ORM.Table("heartbeats").Joins("JOIN projects ON projects.name = heartbeats.project JOIN users ON projects.user_id = users.id").
 		Order("heartbeats.time DESC").Find(&heartbeats)
 	return heartbeats
+}
+
+func (u User) allTimeRecordsSQL() string {
+	return fmt.Sprintf("select * from time_trackeds WHERE time_trackeds.user_id = %v", u.Id)
+}
+
+func (u User) curMonthTimeRecordsSQL() string {
+	return `select * from generate_series(
+			date_trunc('month', now()), 
+			date_trunc('month', current_date) + INTERVAL '1 Month - 1 Day', 
+			interval '1 day'
+			) day 
+			LEFT JOIN LATERAL (
+				` + u.allTimeRecordsSQL() + `
+			) times ON date_trunc('day', created_at) = day`
+}
+
+func (u User) curYearTimeRecordsSQL() string {
+	return `select * from generate_series(
+			date_trunc('year', now()), 
+			date_trunc('year', current_date) + INTERVAL '1 year - 1 Day', 
+			interval '1 day'
+			) day 
+			LEFT JOIN LATERAL (
+				` + u.allTimeRecordsSQL() + `
+			) times ON date_trunc('day', created_at) = day`
+}
+
+func (u User) timeTrackedChartSQL(rangeSQL string) string {
+	return `
+		select round(coalesce(sum(duration) / 3600,0),1) AS count from (
+			` + rangeSQL + `
+		) AS dates GROUP BY day`
+}
+
+func (u User) TotalMonthTimeTacked() string {
+	var total []float64
+	err := utils.ORM.Raw(`
+		select sum(count) from (
+			`+u.timeTrackedChartSQL(u.curMonthTimeRecordsSQL())+`
+		) as totals`).Pluck("sum", &total).Error
+	if err != nil {
+		utils.Log.Error("failed to get time tracked month total: %v", err)
+		return "0"
+	}
+
+	return utils.RoundFloat(float64(total[0])) // convert to hours
+}
+
+func (u User) TotalYearTimeTacked() string {
+	var total []float64
+	err := utils.ORM.Raw(`
+		select sum(count) from (
+			`+u.timeTrackedChartSQL(u.curYearTimeRecordsSQL())+`
+		) as totals`).Pluck("sum", &total).Error
+	if err != nil {
+		utils.Log.Error("failed to get time tracked month total: %v", err)
+		return "0"
+	}
+
+	return utils.RoundFloat(total[0]) // convert to hours
+}
+
+func (u User) TimeTrackedChartData() string {
+	var count []float64
+	err := utils.ORM.Raw(u.timeTrackedChartSQL(u.curMonthTimeRecordsSQL())).Pluck("count", &count).Error
+
+	if err != nil {
+		utils.Log.Error("Failed to get time tracked chart data! %v", err)
+		return "[]"
+	}
+
+	lst := fmt.Sprint(count)
+	return strings.Replace(lst, " ", ",", -1)
+}
+
+func (u User) TopThreeLanguages() [][]string {
+
+	type langResult struct {
+		Language string
+		Count    int
+	}
+
+	var tmpResults []langResult
+	results := make([][]string, 0)
+	// err := utils.ORM.Table("heartbeats").Select([]string{"laguage"}).
+	// 	Group("language").Error
+
+	err := utils.ORM.Raw(`select language, count(*) from heartbeats where user_id = ? GROUP BY language ORDER BY count DESC`, u.Id).Scan(&tmpResults).Error
+	if err != nil {
+		utils.Log.Error("Failed to get top three languages for user: %v", err)
+		return results
+	}
+
+	sum := 0
+	for i := 0; i < len(tmpResults); i++ {
+		sum += tmpResults[i].Count
+	}
+	for _, topLangRes := range tmpResults {
+		r := []string{
+			topLangRes.Language,
+			strconv.Itoa(
+				int(math.Ceil((float64(topLangRes.Count) / float64(sum)) * 100))),
+			strconv.Itoa(topLangRes.Count),
+		}
+		results = append(results, r)
+	}
+
+	return results[0:3]
 }

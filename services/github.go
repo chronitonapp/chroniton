@@ -52,6 +52,17 @@ func (g GithubIntegration) HandleWebhookEvent(payload []byte) {
 		return
 	}
 
+	webhookEvent := models.WebhookEvent{
+		ProjectId: project.Id,
+		UserId:    user.Id,
+		Payload:   string(payload),
+	}
+	err = utils.ORM.Save(&webhookEvent).Error
+	if err != nil {
+		utils.Log.Error("Failed to create a record for webhook event")
+		return
+	}
+
 	g.computeTimeWorked(webhookPayload, project, user)
 }
 
@@ -69,6 +80,13 @@ func (g GithubIntegration) computeTimeWorked(webhookPayload github.WebHookPayloa
 	for _, commit := range webhookPayload.Commits {
 		duration := g.computeCommitTime(commit, fullRepo[0], fullRepo[1], branch, user)
 		utils.Log.Debug("Duration for commit %v is %v", (*commit.ID)[0:8], duration)
+		tracked := models.TimeTracked{
+			UserId:    user.Id,
+			ProjectId: project.Id,
+			CommitSHA: *commit.ID,
+			Duration:  duration,
+		}
+		utils.ORM.Save(&tracked)
 	}
 }
 

@@ -54,7 +54,7 @@
                             <h5>Last Heartbeat</h5>
                         </div>
                         <div class="ibox-content">
-
+                            <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h4 class="no-margins">
@@ -85,10 +85,7 @@
                 <div class="col-md-4">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <h5>Monthly income</h5>
-                            <div class="ibox-tools">
-                                <span class="label label-primary">Updated 12.2015</span>
-                            </div>
+                            <h5>Push Events Recieved</h5>
                         </div>
                         <div class="ibox-content no-padding">
                             <div class="flot-chart m-t-lg" style="height: 55px;">
@@ -105,39 +102,38 @@
                             <div class="ibox-content">
                                 <div>
                                         <span class="pull-right text-right">
-                                        <small>Average value of sales in the past month in: <strong>United states</strong></small>
-                                            <br/>
-                                            All sales: 162,862
+                                        <small>Project with the most tracked hours: <strong>Chroniton</strong></small>
                                         </span>
                                     <h3 class="font-bold no-margins">
-                                        Half-year revenue margin
+                                        Total Hours Tracked
                                     </h3>
-                                    <small>Sales marketing.</small>
+                                    <small>By Day</small>
                                 </div>
 
                                 <div class="m-t-sm">
 
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-9">
                                             <div>
                                             <canvas id="lineChart" height="114"></canvas>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <ul class="stat-list m-t-lg">
                                                 <li>
-                                                    <h2 class="no-margins">2,346</h2>
-                                                    <small>Total orders in period</small>
-                                                    <div class="progress progress-mini">
+                                                    <h2 class="no-margins">{{.TotalMonthTimeTacked}}</h2>
+                                                    <small>Total hours for current month</small>
+                                                    <!-- <div class="progress progress-mini">
                                                         <div class="progress-bar" style="width: 48%;"></div>
-                                                    </div>
+                                                    </div> -->
+                                                    <div class="hr-line-dashed"></div>
                                                 </li>
                                                 <li>
-                                                    <h2 class="no-margins ">4,422</h2>
-                                                    <small>Orders in last month</small>
-                                                    <div class="progress progress-mini">
+                                                    <h2 class="no-margins ">{{.TotalYearTimeTacked}}</h2>
+                                                    <small>Total hours for current year</small>
+                                                    <!-- <div class="progress progress-mini">
                                                         <div class="progress-bar" style="width: 60%;"></div>
-                                                    </div>
+                                                    </div> -->
                                                 </li>
                                             </ul>
                                         </div>
@@ -150,9 +146,6 @@
                                         <i class="fa fa-clock-o"> </i>
                                         Update on 16.07.2015
                                     </small>
-                                    <small>
-                                        <strong>Analysis of sales:</strong> The value has been changed over time, and last month reached a level over $50,000.
-                                    </small>
                                 </div>
 
                             </div>
@@ -161,60 +154,27 @@
                     <div class="col-lg-4">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
-                                <span class="label label-warning pull-right">Data has changed</span>
                                 <h5>Top Languages</h5>
                             </div>
-                            <div class="ibox-content">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">Language</small>
-                                        <h4>Markdown</h4>
-                                    </div>
+                            {{range .TopThreeLanguages}}
+                                <div class="ibox-content">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <small class="stats-label">Language</small>
+                                            <h4>{{index . 0}}</h4>
+                                        </div>
 
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">% of Usage</small>
-                                        <h4>46.11%</h4>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <small class="stats-label"># of Heartbeats</small>
-                                        <h4>432.021</h4>
+                                        <div class="col-xs-4">
+                                            <small class="stats-label">% of Usage</small>
+                                            <h4>{{index . 1}}%</h4>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <small class="stats-label"># of Heartbeats</small>
+                                            <h4>{{index . 2}}</h4>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ibox-content">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">Pages / Visit</small>
-                                        <h4>643 321.10</h4>
-                                    </div>
-
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">% New Visits</small>
-                                        <h4>92.43%</h4>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">Last week</small>
-                                        <h4>564.554</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ibox-content">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">Pages / Visit</small>
-                                        <h4>436 547.20</h4>
-                                    </div>
-
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">% New Visits</small>
-                                        <h4>150.23%</h4>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <small class="stats-label">Last week</small>
-                                        <h4>124.990</h4>
-                                    </div>
-                                </div>
-                            </div>
+                            {{end}}
                         </div>
                     </div>
 
@@ -225,33 +185,11 @@
                     <div class="col-lg-12">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
-                                <h5>Custom responsive table </h5>
-                                <div class="ibox-tools">
-                                    <a class="collapse-link">
-                                        <i class="fa fa-chevron-up"></i>
-                                    </a>
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                        <i class="fa fa-wrench"></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-user">
-                                        <li><a href="#">Config option 1</a>
-                                        </li>
-                                        <li><a href="#">Config option 2</a>
-                                        </li>
-                                    </ul>
-                                    <a class="close-link">
-                                        <i class="fa fa-times"></i>
-                                    </a>
-                                </div>
+                                <h5>Projects</h5>
                             </div>
                             <div class="ibox-content">
                                 <div class="row">
                                     <div class="col-sm-9 m-b-xs">
-                                        <div data-toggle="buttons" class="btn-group">
-                                            <label class="btn btn-sm btn-white"> <input type="radio" id="option1" name="options"> Day </label>
-                                            <label class="btn btn-sm btn-white active"> <input type="radio" id="option2" name="options"> Week </label>
-                                            <label class="btn btn-sm btn-white"> <input type="radio" id="option3" name="options"> Month </label>
-                                        </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="input-group"><input type="text" placeholder="Search" class="input-sm form-control"> <span class="input-group-btn">
@@ -286,149 +224,6 @@
                                             <td>Jul 14, 2013</td>
                                             <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Alpha project</td>
-                                            <td>Alice Jackson</td>
-                                            <td>0500 780909</td>
-                                            <td>Nec Euismod In Company</td>
-                                            <td><span class="pie">6,9</span></td>
-                                            <td>40%</td>
-                                            <td>Jul 16, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Betha project</td>
-                                            <td>John Smith</td>
-                                            <td>0800 1111</td>
-                                            <td>Erat Volutpat</td>
-                                            <td><span class="pie">3,1</span></td>
-                                            <td>75%</td>
-                                            <td>Jul 18, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Gamma project</td>
-                                            <td>Anna Jordan</td>
-                                            <td>(016977) 0648</td>
-                                            <td>Tellus Ltd</td>
-                                            <td><span class="pie">4,9</span></td>
-                                            <td>18%</td>
-                                            <td>Jul 22, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Alpha project</td>
-                                            <td>Alice Jackson</td>
-                                            <td>0500 780909</td>
-                                            <td>Nec Euismod In Company</td>
-                                            <td><span class="pie">6,9</span></td>
-                                            <td>40%</td>
-                                            <td>Jul 16, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Project <small>This is example of project</small></td>
-                                            <td>Patrick Smith</td>
-                                            <td>0800 051213</td>
-                                            <td>Inceptos Hymenaeos Ltd</td>
-                                            <td><span class="pie">0.52/1.561</span></td>
-                                            <td>20%</td>
-                                            <td>Jul 14, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Gamma project</td>
-                                            <td>Anna Jordan</td>
-                                            <td>(016977) 0648</td>
-                                            <td>Tellus Ltd</td>
-                                            <td><span class="pie">4,9</span></td>
-                                            <td>18%</td>
-                                            <td>Jul 22, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Project <small>This is example of project</small></td>
-                                            <td>Patrick Smith</td>
-                                            <td>0800 051213</td>
-                                            <td>Inceptos Hymenaeos Ltd</td>
-                                            <td><span class="pie">0.52/1.561</span></td>
-                                            <td>20%</td>
-                                            <td>Jul 14, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Alpha project</td>
-                                            <td>Alice Jackson</td>
-                                            <td>0500 780909</td>
-                                            <td>Nec Euismod In Company</td>
-                                            <td><span class="pie">6,9</span></td>
-                                            <td>40%</td>
-                                            <td>Jul 16, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Betha project</td>
-                                            <td>John Smith</td>
-                                            <td>0800 1111</td>
-                                            <td>Erat Volutpat</td>
-                                            <td><span class="pie">3,1</span></td>
-                                            <td>75%</td>
-                                            <td>Jul 18, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Gamma project</td>
-                                            <td>Anna Jordan</td>
-                                            <td>(016977) 0648</td>
-                                            <td>Tellus Ltd</td>
-                                            <td><span class="pie">4,9</span></td>
-                                            <td>18%</td>
-                                            <td>Jul 22, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Alpha project</td>
-                                            <td>Alice Jackson</td>
-                                            <td>0500 780909</td>
-                                            <td>Nec Euismod In Company</td>
-                                            <td><span class="pie">6,9</span></td>
-                                            <td>40%</td>
-                                            <td>Jul 16, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Project <small>This is example of project</small></td>
-                                            <td>Patrick Smith</td>
-                                            <td>0800 051213</td>
-                                            <td>Inceptos Hymenaeos Ltd</td>
-                                            <td><span class="pie">0.52/1.561</span></td>
-                                            <td>20%</td>
-                                            <td>Jul 14, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Gamma project</td>
-                                            <td>Anna Jordan</td>
-                                            <td>(016977) 0648</td>
-                                            <td>Tellus Ltd</td>
-                                            <td><span class="pie">4,9</span></td>
-                                            <td>18%</td>
-                                            <td>Jul 22, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -441,8 +236,23 @@
 
             </div>
 
-
 <script>
+        function getDaysArray() {
+                var curDate = new Date();
+                var year = curDate.getFullYear();
+                var month = curDate.getMonth() + 1
+                var numDaysInMonth, daysInWeek, daysIndex, index, i, l, daysArray;
+
+                numDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                daysArray = [];
+
+                for (i = 0, l = numDaysInMonth[month - 1]; i < l; i++) {
+                    daysArray.push((i + 1));
+                }
+
+                return daysArray;
+            }
+
         $(document).ready(function() {
 
 
@@ -484,18 +294,8 @@
             });
 
             var lineData = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                labels: getDaysArray(),
                 datasets: [
-                    {
-                        label: "Example dataset",
-                        fillColor: "rgba(220,220,220,0.5)",
-                        strokeColor: "rgba(220,220,220,1)",
-                        pointColor: "rgba(220,220,220,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(220,220,220,1)",
-                        data: [65, 59, 40, 51, 36, 25, 40]
-                    },
                     {
                         label: "Example dataset",
                         fillColor: "rgba(26,179,148,0.5)",
@@ -504,7 +304,7 @@
                         pointStrokeColor: "#fff",
                         pointHighlightFill: "#fff",
                         pointHighlightStroke: "rgba(26,179,148,1)",
-                        data: [48, 48, 60, 39, 56, 37, 30]
+                        data: JSON.parse({{.TimeTrackedChartData}})
                     }
                 ]
             };
@@ -528,6 +328,7 @@
 
             var ctx = document.getElementById("lineChart").getContext("2d");
             var myNewChart = new Chart(ctx).Line(lineData, lineOptions);
-
         });
+
+    var debug = {{.TopThreeLanguages}}
     </script>
