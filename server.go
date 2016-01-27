@@ -1,9 +1,9 @@
 package main
 
 import (
-	_ "github.com/gophergala2016/chroniton/models"
-	"github.com/gophergala2016/chroniton/services"
-	"github.com/gophergala2016/chroniton/utils"
+	//_ "github.com/chronitonapp/chroniton/models"
+	"github.com/chronitonapp/chroniton/services"
+	"github.com/chronitonapp/chroniton/utils"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
@@ -29,6 +29,6 @@ func main() {
 		service.Register(m.Router)
 	}
 
-	utils.Log.Info("Running Chroniton Server...")
+	utils.Log.Info("Running Chroniton Server...!!!!!!")
 	m.Run()
 }

@@ -3,8 +3,8 @@ package services
 import (
 	"net/http"
 
-	"github.com/gophergala2016/chroniton/models"
-	"github.com/gophergala2016/chroniton/utils"
+	"github.com/chronitonapp/chroniton/models"
+	"github.com/chronitonapp/chroniton/utils"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"

@@ -47,11 +47,22 @@
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             {{if (ne (len .Heartbeats) 0)}}
-                                <span class="label label-primary pull-right">{{(index .Heartbeats 0).HumanTime}}</span>
+                                <span class="label label-primary pull-right">
+                                    {{(index .Heartbeats 0).HumanTime}}
+                                </span>
+                                {{if .IsSyncingWakaTime}}
+                                    <i class='fa fa-spin fa-spinner pull-right'></i>
+                                {{end}}
                             {{else}}
                                 <span class="label label-error pull-right">None</span>
                             {{end}}
-                            <h5>Last Heartbeat</h5>
+                            <h5>Last Heartbeat 
+                                <span>
+                                    <a href='/wakatime/sync'>
+                                        (sync now)
+                                    </a>
+                                </span>
+                            </h5>
                         </div>
                         <div class="ibox-content">
                             <br>
@@ -202,28 +213,30 @@
                                         <tr>
 
                                             <th>#</th>
-                                            <th>Project </th>
-                                            <th>Name </th>
-                                            <th>Phone </th>
-                                            <th>Company </th>
-                                            <th>Completed </th>
-                                            <th>Task</th>
-                                            <th>Date</th>
+                                            <th>Project</th>
+                                            <th>Repo Name</th>
+                                            <th>Git Platform </th>
+                                            <th>Project Management </th>
+                                            <th>Tracked Time</th>
+                                            <th>Created</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Project <small>This is example of project</small></td>
-                                            <td>Patrick Smith</td>
-                                            <td>0800 051213</td>
-                                            <td>Inceptos Hymenaeos Ltd</td>
-                                            <td><span class="pie">0.52/1.561</span></td>
-                                            <td>20%</td>
-                                            <td>Jul 14, 2013</td>
-                                            <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
-                                        </tr>
+                                        {{range .Projects}}
+                                            <tr>
+                                                <td>{{.Id}}</td>
+                                                <td>{{.Name}}</td>
+                                                <td>{{.GitRepoName}}</td>
+                                                <td>{{.GitIntegrationName}}</td>
+                                                <td>{{.PmIntegrationName}}</td>
+                                                <td>{{.TotalHours}} Hours</td>
+                                                <td>{{.CreatedAt}}</td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                        {{end}}
                                         </tbody>
                                     </table>
                                 </div>

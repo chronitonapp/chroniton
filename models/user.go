@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gophergala2016/chroniton/utils"
+	"github.com/chronitonapp/chroniton/utils"
 
+	"github.com/jinzhu/gorm"
 	wakatime "github.com/jsimnz/go.wakatime"
 )
 
@@ -21,10 +22,18 @@ type User struct {
 	IsSyncingWakaTime bool
 	LastWakaTimeSync  time.Time
 	CreatedAt         time.Time
+
+	// Associated Models
+	Projects []Project
 }
 
 func (u User) Verify() []error {
 	return make([]error, 0)
+}
+
+func (u *User) AfterFind(db *gorm.DB) error {
+	utils.ORM.Model(u).Related(&u.Projects)
+	return nil
 }
 
 func (u User) PullNewestHeartbeats() {
@@ -72,12 +81,6 @@ func (u User) PullNewestHeartbeats() {
 	u.LastWakaTimeSync = *wtUser.LastHeartbeat
 	u.IsSyncingWakaTime = false
 	utils.ORM.Save(&u)
-}
-
-func (u User) Projects() []Project {
-	var projects []Project
-	utils.ORM.Where("user_id = ?", u.Id).Find(&projects)
-	return projects
 }
 
 func (u User) NumReceivedPushes() int {
