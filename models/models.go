@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/gophergala2016/chroniton/utils"
+	"github.com/chronitonapp/chroniton/utils"
 )
 
 func init() {

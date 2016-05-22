@@ -8226,3 +8226,19 @@ body.md-skin {
     margin: 0;
   }
 }
+
+.header-item {
+  padding: 15px 0px 15px 20px;
+  color: #676a6c;
+  position: relative;
+  display: block;
+  font-weight: bold;
+}
+
+#chart svg {
+  height: 95px !important;
+}
+
+.c3-chart-arc > text {
+  display: none;
+}

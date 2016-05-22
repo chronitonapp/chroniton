@@ -6,8 +6,8 @@ import (
 	"fmt"
 	//"time"
 
-	"github.com/gophergala2016/chroniton/models"
-	"github.com/gophergala2016/chroniton/utils"
+	"github.com/chronitonapp/chroniton/models"
+	"github.com/chronitonapp/chroniton/utils"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
@@ -37,4 +37,8 @@ func (ps ProjectService) Create(currentUser models.User, project models.Project,
 		r.HTML(403, "project/new", project)
 	}
 	r.Redirect(fmt.Sprintf("projects/%v", project.Id))
+}
+
+func (ps ProjectService) List(currentUser models.User, r render.Render) {
+	r.HTML(200, "project/list", currentUser)
 }

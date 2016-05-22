@@ -1,316 +1,327 @@
 <div class="container">
 
-            <div class="row wrapper border-bottom page-heading">
-                <div class="col-lg-10">
-                    <h2>Dashboard</h2>
-                    <ol class="breadcrumb">
-                        <li>
-                            <a href="index.html">Home</a>
-                        </li>
-                        <li class="active">
-                            <strong>Dashboard</strong>
-                        </li>
-                    </ol>
-                </div>
-                <div class="col-lg-2">
+    <div class="row wrapper border-bottom page-heading">
+        <div class="col-lg-10">
+            <h2>Dashboard</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="active">
+                    <strong>Dashboard</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
 
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Projects</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{{len .CurrentUser.Projects}}</h1>
+                    <small>Total projects</small>
                 </div>
             </div>
-
-            <br>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Projects</h5>
-                        </div>
-                        <div class="ibox-content">
-                            <h1 class="no-margins">{{len .Projects}}</h1>
-                            <small>Total projects</small>
-                        </div>
-                    </div>
+        </div>
+        <div class="col-md-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Push Events</h5>
                 </div>
-                <div class="col-md-2">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Push Events</h5>
-                        </div>
-                        <div class="ibox-content">
-                                    <h1 class="no-margins">{{.NumReceivedPushes}}</h1>
-                                    <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
-                                    <small>Recieved Events</small>
-                        </div>
-                    </div>
+                <div class="ibox-content">
+                            <h1 class="no-margins">{{.NumReceivedPushes}}</h1>
+                            <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+                            <small>Recieved Events</small>
                 </div>
+            </div>
+        </div>
 
-                <div class="col-md-4">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            {{if (ne (len .Heartbeats) 0)}}
-                                <span class="label label-primary pull-right">
-                                    {{(index .Heartbeats 0).HumanTime}}
-                                </span>
-                                {{if .IsSyncingWakaTime}}
-                                    <i class='fa fa-spin fa-spinner pull-right'></i>
+        <div class="col-md-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    {{if (ne (len .Heartbeats) 0)}}
+                        <span class="label label-primary pull-right">
+                            {{(index .Heartbeats 0).HumanTime}}
+                        </span>
+                        {{if .IsSyncingWakaTime}}
+                            <i class='fa fa-spin fa-spinner pull-right'></i>
+                        {{end}}
+                    {{else}}
+                        <span class="label label-error pull-right">None</span>
+                    {{end}}
+                    <h5>Last Heartbeat 
+                        <span>
+                            <a href='/wakatime/sync'>
+                                (sync now)
+                            </a>
+                        </span>
+                    </h5>
+                </div>
+                <div class="ibox-content">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="no-margins">
+                                {{if (ne (len .Heartbeats) 0)}}
+                                    {{(index .Heartbeats 0).Project}}
+                                {{else}}
+                                    N/A
                                 {{end}}
-                            {{else}}
-                                <span class="label label-error pull-right">None</span>
-                            {{end}}
-                            <h5>Last Heartbeat 
-                                <span>
-                                    <a href='/wakatime/sync'>
-                                        (sync now)
-                                    </a>
+                            </h4>
+                            <div class="font-bold text-navy">Project</div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="no-margins">
+                                {{if (ne (len .Heartbeats) 0)}}
+                                    {{(index .Heartbeats 0).Branch}}
+                                {{else}}
+                                    N/A
+                                {{end}}
+                            </h4>
+                            <div class="font-bold text-navy">Branch</div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Time stats</h5>
+                </div>
+                <div class="ibox-content no-padding">
+                    <div class="flot-chart" style="height: 85px;">
+                        <div class="flot-chart-content" id="chart"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Project Stats</h5>
+                </div>
+                <div class="ibox-content no-padding">
+                </div>
+
+            </div>
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div>
+                                <span class="pull-right text-right">
+                                <small>Project with the most tracked hours: <strong>Chroniton</strong></small>
                                 </span>
-                            </h5>
+                            <h3 class="font-bold no-margins">
+                                Total Hours Tracked
+                            </h3>
+                            <small>By Day</small>
                         </div>
-                        <div class="ibox-content">
-                            <br>
+
+                        <div class="m-t-sm">
+
                             <div class="row">
-                                <div class="col-md-6">
-                                    <h4 class="no-margins">
-                                        {{if (ne (len .Heartbeats) 0)}}
-                                            {{(index .Heartbeats 0).Project}}
-                                        {{else}}
-                                            N/A
-                                        {{end}}
-                                    </h4>
-                                    <div class="font-bold text-navy">Project</div>
+                                <div class="col-md-9">
+                                    <div>
+                                    <canvas id="lineChart" height="114"></canvas>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <h4 class="no-margins">
-                                        {{if (ne (len .Heartbeats) 0)}}
-                                            {{(index .Heartbeats 0).Branch}}
-                                        {{else}}
-                                            N/A
-                                        {{end}}
-                                    </h4>
-                                    <div class="font-bold text-navy">Branch</div>
+                                <div class="col-md-3">
+                                    <ul class="stat-list m-t-lg">
+                                        <li>
+                                            <h2 class="no-margins">{{.TotalMonthTimeTacked}}</h2>
+                                            <small>Total hours for current month</small>
+                                            <!-- <div class="progress progress-mini">
+                                                <div class="progress-bar" style="width: 48%;"></div>
+                                            </div> -->
+                                            <div class="hr-line-dashed"></div>
+                                        </li>
+                                        <li>
+                                            <h2 class="no-margins ">{{.TotalYearTimeTacked}}</h2>
+                                            <small>Total hours for current year</small>
+                                            <!-- <div class="progress progress-mini">
+                                                <div class="progress-bar" style="width: 60%;"></div>
+                                            </div> -->
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
 
+                        </div>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Push Events Recieved</h5>
-                        </div>
-                        <div class="ibox-content no-padding">
-                            <div class="flot-chart m-t-lg" style="height: 55px;">
-                                <div class="flot-chart-content" id="flot-chart1"></div>
-                            </div>
+                        <div class="m-t-md">
+                            <small class="pull-right">
+                                <i class="fa fa-clock-o"> </i>
+                                Update on 16.07.2015
+                            </small>
                         </div>
 
                     </div>
                 </div>
             </div>
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-content">
-                                <div>
-                                        <span class="pull-right text-right">
-                                        <small>Project with the most tracked hours: <strong>Chroniton</strong></small>
-                                        </span>
-                                    <h3 class="font-bold no-margins">
-                                        Total Hours Tracked
-                                    </h3>
-                                    <small>By Day</small>
+            <div class="col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Top Languages</h5>
+                    </div>
+                    {{range .TopThreeLanguages}}
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <small class="stats-label">Language</small>
+                                    <h4>{{index . 0}}</h4>
                                 </div>
 
-                                <div class="m-t-sm">
-
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <div>
-                                            <canvas id="lineChart" height="114"></canvas>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <ul class="stat-list m-t-lg">
-                                                <li>
-                                                    <h2 class="no-margins">{{.TotalMonthTimeTacked}}</h2>
-                                                    <small>Total hours for current month</small>
-                                                    <!-- <div class="progress progress-mini">
-                                                        <div class="progress-bar" style="width: 48%;"></div>
-                                                    </div> -->
-                                                    <div class="hr-line-dashed"></div>
-                                                </li>
-                                                <li>
-                                                    <h2 class="no-margins ">{{.TotalYearTimeTacked}}</h2>
-                                                    <small>Total hours for current year</small>
-                                                    <!-- <div class="progress progress-mini">
-                                                        <div class="progress-bar" style="width: 60%;"></div>
-                                                    </div> -->
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
+                                <div class="col-xs-4">
+                                    <small class="stats-label">% of Usage</small>
+                                    <h4>{{index . 1}}%</h4>
                                 </div>
-
-                                <div class="m-t-md">
-                                    <small class="pull-right">
-                                        <i class="fa fa-clock-o"> </i>
-                                        Update on 16.07.2015
-                                    </small>
+                                <div class="col-xs-4">
+                                    <small class="stats-label"># of Heartbeats</small>
+                                    <h4>{{index . 2}}</h4>
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>Top Languages</h5>
-                            </div>
-                            {{range .TopThreeLanguages}}
-                                <div class="ibox-content">
-                                    <div class="row">
-                                        <div class="col-xs-4">
-                                            <small class="stats-label">Language</small>
-                                            <h4>{{index . 0}}</h4>
-                                        </div>
-
-                                        <div class="col-xs-4">
-                                            <small class="stats-label">% of Usage</small>
-                                            <h4>{{index . 1}}%</h4>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <small class="stats-label"># of Heartbeats</small>
-                                            <h4>{{index . 2}}</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            {{end}}
-                        </div>
-                    </div>
-
+                    {{end}}
                 </div>
-
-                <div class="row">
-
-                    <div class="col-lg-12">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>Projects</h5>
-                            </div>
-                            <div class="ibox-content">
-                                <div class="row">
-                                    <div class="col-sm-9 m-b-xs">
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="input-group"><input type="text" placeholder="Search" class="input-sm form-control"> <span class="input-group-btn">
-                                        <button type="button" class="btn btn-sm btn-primary"> Go!</button> </span></div>
-                                    </div>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-striped">
-                                        <thead>
-                                        <tr>
-
-                                            <th>#</th>
-                                            <th>Project</th>
-                                            <th>Repo Name</th>
-                                            <th>Git Platform </th>
-                                            <th>Project Management </th>
-                                            <th>Tracked Time</th>
-                                            <th>Created</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {{range .Projects}}
-                                            <tr>
-                                                <td>{{.Id}}</td>
-                                                <td>{{.Name}}</td>
-                                                <td>{{.GitRepoName}}</td>
-                                                <td>{{.GitIntegrationName}}</td>
-                                                <td>{{.PmIntegrationName}}</td>
-                                                <td>{{.TotalHours}} Hours</td>
-                                                <td>{{.CreatedAt}}</td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-check text-navy"></i></a>
-                                                </td>
-                                            </tr>
-                                        {{end}}
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
             </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Projects</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-9 m-b-xs">
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="input-group"><input type="text" placeholder="Search" class="input-sm form-control"> <span class="input-group-btn">
+                                <button type="button" class="btn btn-sm btn-primary"> Go!</button> </span></div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+
+                                    <th>#</th>
+                                    <th>Project</th>
+                                    <th>Git Platform </th>
+                                    <th>Project Management </th>
+                                    <th>Tracked Time</th>
+                                    <th>Created</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{range .Projects}}
+                                    <tr>
+                                        <td>{{.Id}}</td>
+                                        <td>{{.Name}}</td>
+                                        <td>{{.GitIntegrationName}}</td>
+                                        <td>{{.PmIntegrationName}}</td>
+                                        <td>{{.TotalHours}} Hours</td>
+                                        <td>{{.CreatedAt}}</td>
+                                        <td>
+                                            <a href="#"><i class="fa fa-check text-navy"></i></a>
+                                        </td>
+                                    </tr>
+                                {{end}}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 
 <script>
         function getDaysArray() {
                 var curDate = new Date();
                 var year = curDate.getFullYear();
-                var month = curDate.getMonth() + 1
+                var month = curDate.getMonth()
                 var numDaysInMonth, daysInWeek, daysIndex, index, i, l, daysArray;
 
-                numDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                monthAbbr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+                                "Aug", "Sep", "Oct", "Nov", "Dec"];
                 daysArray = [];
 
-                for (i = 0, l = numDaysInMonth[month - 1]; i < l; i++) {
-                    daysArray.push((i + 1));
+                for (i = 0; i < 7; i++) {
+                    daysArray.push(monthAbbr[curDate.getMonth()] + " " + curDate.getDate())
+                    curDate.setDate(curDate.getDate() - 1)
+                    console.log(curDate)
                 }
 
-                return daysArray;
+                return daysArray.reverse()
+                //return [1,2,3,4,5,6,7];
+                //return ["Jan 25", "Jan 26", "Jan 27", "Jan 28", "Jan 29", "Jan 30", "Jan 31"]
             }
 
         $(document).ready(function() {
 
-
-            var d1 = [[1262304000000, 6], [1264982400000, 3057], [1267401600000, 20434], [1270080000000, 31982], [1272672000000, 26602], [1275350400000, 27826], [1277942400000, 24302], [1280620800000, 24237], [1283299200000, 21004], [1285891200000, 12144], [1288569600000, 10577], [1291161600000, 10295]];
-            var d2 = [[1262304000000, 5], [1264982400000, 200], [1267401600000, 1605], [1270080000000, 6129], [1272672000000, 11643], [1275350400000, 19055], [1277942400000, 30062], [1280620800000, 39197], [1283299200000, 37000], [1285891200000, 27000], [1288569600000, 21000], [1291161600000, 17000]];
-
-            var data1 = [
-                { label: "Data 1", data: d1, color: '#17a084'},
-                { label: "Data 2", data: d2, color: '#127e68' }
-            ];
-            $.plot($("#flot-chart1"), data1, {
-                xaxis: {
-                    tickDecimals: 0
+            var chart = c3.generate({
+                data: {
+                    columns: [
+                        ['Avg', 45],
+                        ['Today', 14],
+                    ],
+                    type: 'gauge',
                 },
-                series: {
-                    lines: {
-                        show: true,
-                        fill: true,
-                        fillColor: {
-                            colors: [{
-                                opacity: 1
-                            }, {
-                                opacity: 1
-                            }]
-                        },
-                    },
-                    points: {
-                        width: 0.1,
-                        show: false
-                    },
+                gauge: {
+            //        label: {
+            //            format: function(value, ratio) {
+            //                return value;
+            //            },
+            //            show: false // to turn off the min/max labels.
+            //        },
+            //    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+            //    max: 100, // 100 is default
+            //    units: ' %',
+            //    width: 39 // for adjusting arc thickness
                 },
-                grid: {
-                    show: false,
-                    borderWidth: 0
+                color: {
+                    pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+                    threshold: {
+            //            unit: 'value', // percentage is default
+            //            max: 200, // 100 is default
+                        values: [30, 60, 90, 100]
+                    }
                 },
-                legend: {
-                    show: false,
+                size: {
+                    height: 75
                 }
             });
+
 
             var lineData = {
                 labels: getDaysArray(),
                 datasets: [
                     {
-                        label: "Example dataset",
+                        label: "Tracked Time",
+                        type: "line",
+                        yAxesGroup: "1",
                         fillColor: "rgba(26,179,148,0.5)",
                         strokeColor: "rgba(26,179,148,0.7)",
                         pointColor: "rgba(26,179,148,1)",
@@ -318,8 +329,23 @@
                         pointHighlightFill: "#fff",
                         pointHighlightStroke: "rgba(26,179,148,1)",
                         data: JSON.parse({{.TimeTrackedChartData}})
+                    },
+                    {
+                        label: "Total Heartbeats",
+                        type: "bar",
+                        yAxesGroup: "2",
+                        fillColor: "#ddd",
+                        strokeColor: "#aaa",
+                        data: JSON.parse({{.NumHeartbeatsChartData}})
                     }
-                ]
+                ],
+                 yAxes: [{
+                     name: "1",
+                     scalePositionLeft: true,
+                 }, {
+                     name: "2",
+                     scalePositionLeft: false,
+                 }]
             };
 
             var lineOptions = {
@@ -340,7 +366,7 @@
 
 
             var ctx = document.getElementById("lineChart").getContext("2d");
-            var myNewChart = new Chart(ctx).Line(lineData, lineOptions);
+            var myNewChart = new Chart(ctx).Overlay(lineData, lineOptions);
         });
 
     var debug = {{.TopThreeLanguages}}

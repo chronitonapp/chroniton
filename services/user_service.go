@@ -27,7 +27,8 @@ func (us UserService) Register(router martini.Router) {
 
 	router.Get("/signout", us.SignOut)
 	router.Get("/signup", PreventReauth, us.SignUp)
-	router.Get("/signin", PreventReauth, us.SignIn)
+	router.Get("/signin", PreventReauth, binding.Bind(models.User{}), us.SignIn)
+	router.Post("/signin", PreventReauth, binding.Bind(models.User{}), us.Authenticate)
 	router.Get("/dashboard", EnsureAuth, us.Dashboard)
 	router.Get("/settings", EnsureAuth, us.Edit)
 	router.Get("/settings/:category", EnsureAuth, us.Edit)
@@ -53,15 +54,36 @@ func (us UserService) Create(user models.User, req *http.Request, rw http.Respon
 		return
 	}
 
-	session, _ := utils.SessionStore.New(req, "chroniton")
-	session.Values["id"] = user.Id
-	session.Save(req, rw)
+	// session, _ := utils.SessionStore.New(req, "chroniton")
+	// session.Values["id"] = user.Id
+	// session.Save(req, rw)
+	createAuth(user.Id, req, rw)
 
 	r.Redirect("/dashboard")
 }
 
-func (us UserService) SignIn(r render.Render) {
+func (us UserService) SignIn(req *http.Request, r render.Render) {
 	r.HTML(200, "user/signin", nil)
+}
+
+func (us UserService) Authenticate(user models.User, req *http.Request, rw http.ResponseWriter, r render.Render) {
+	if user.Email == "" || user.Password == "" {
+		r.HTML(403, "user/signin", ErrorResponse("Email or Password can't be blank", user))
+		return
+	}
+
+	var foundUsers []models.User
+	var currentUser models.User
+	utils.ORM.Where("email = ? AND password = ?", user.Email, user.Password).Find(&foundUsers)
+	if len(foundUsers) == 0 {
+		r.HTML(403, "user/signin", ErrorResponse("Invalid Email or Password", user))
+		return
+	}
+
+	currentUser = foundUsers[0]
+	createAuth(currentUser.Id, req, rw)
+
+	r.Redirect("/dashboard")
 }
 
 func (us UserService) SignOut(w http.ResponseWriter, req *http.Request, r render.Render) {
@@ -131,5 +153,15 @@ func (us UserService) SyncHeartbeats(currentUser models.User, r render.Render, r
 }
 
 func (us UserService) Dashboard(current_user models.User, r render.Render) {
-	r.HTML(200, "dashboard", current_user)
+	r.HTML(200, "dashboard", SuccessResponse(current_user))
+}
+
+func createAuth(userId int64, req *http.Request, rw http.ResponseWriter) {
+	session, _ := utils.SessionStore.New(req, "chroniton")
+	session.Values["id"] = userId
+	session.Save(req, rw)
+}
+
+func clearAuth() {
+
 }

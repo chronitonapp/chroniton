@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/chronitonapp/gormseries"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
@@ -16,7 +17,7 @@ const (
 )
 
 var (
-	ORM gorm.DB
+	ORM *gormseries.SeriesDB
 )
 
 type urlInfo struct {
@@ -49,7 +50,7 @@ func init() {
 	rawDbURL := os.Getenv("CHRONITON_DB_URL")
 	dbURL, _ := url.Parse(rawDbURL)
 	parsedDbURL := ParseUrl(dbURL)
-	ORM, err = gorm.Open("postgres", fmt.Sprintf(
+	db, err := gorm.Open("postgres", fmt.Sprintf(
 		DB_PARAMS_TEMPLATE, parsedDbURL.Path,
 		parsedDbURL.Host, parsedDbURL.Port,
 		parsedDbURL.Username, parsedDbURL.Password,
@@ -59,5 +60,7 @@ func init() {
 	}
 
 	fmt.Println("Connected!")
-	ORM.LogMode(true)
+	db.LogMode(true)
+
+	ORM = gormseries.NewSeriesDB(db)
 }

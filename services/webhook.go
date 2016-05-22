@@ -38,6 +38,8 @@ func (ws WebhookService) Handle(r render.Render, req *http.Request, params marti
 		return
 	}
 
-	go gitService.HandleWebhookEvent(payload)
+	go func() {
+		gitService.HandleWebhookEvent(payload)
+	}()
 	r.Status(200)
 }

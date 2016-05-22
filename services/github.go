@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gophergala2016/chroniton/models"
-	"github.com/gophergala2016/chroniton/utils"
+	"github.com/chronitonapp/chroniton/models"
+	"github.com/chronitonapp/chroniton/utils"
 
 	"github.com/google/go-github/github"
 )
@@ -51,6 +51,8 @@ func (g GithubIntegration) HandleWebhookEvent(payload []byte) {
 		utils.Log.Error("Couldn't get associated user for project %v. %v", project.Name, err)
 		return
 	}
+
+	user.PullNewestHeartbeats()
 
 	webhookEvent := models.WebhookEvent{
 		ProjectId: project.Id,

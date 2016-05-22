@@ -9,6 +9,7 @@ import (
 
 	"github.com/chronitonapp/chroniton/utils"
 
+	"github.com/chronitonapp/gormseries"
 	"github.com/jinzhu/gorm"
 	wakatime "github.com/jsimnz/go.wakatime"
 )
@@ -97,45 +98,14 @@ func (u User) Heartbeats() []Heartbeat {
 	return heartbeats
 }
 
-func (u User) allTimeRecordsSQL() string {
-	return fmt.Sprintf("select * from time_trackeds WHERE time_trackeds.user_id = %v", u.Id)
-}
-
-func (u User) curMonthTimeRecordsSQL() string {
-	return `select * from generate_series(
-			date_trunc('month', now()), 
-			date_trunc('month', current_date) + INTERVAL '1 Month - 1 Day', 
-			interval '1 day'
-			) day 
-			LEFT JOIN LATERAL (
-				` + u.allTimeRecordsSQL() + `
-			) times ON date_trunc('day', created_at) = day`
-}
-
-func (u User) curYearTimeRecordsSQL() string {
-	return `select * from generate_series(
-			date_trunc('year', now()), 
-			date_trunc('year', current_date) + INTERVAL '1 year - 1 Day', 
-			interval '1 day'
-			) day 
-			LEFT JOIN LATERAL (
-				` + u.allTimeRecordsSQL() + `
-			) times ON date_trunc('day', created_at) = day`
-}
-
-func (u User) timeTrackedChartSQL(rangeSQL string) string {
-	return `
-		select round(coalesce(sum(duration) / 3600,0),1) AS count from (
-			` + rangeSQL + `
-		) AS dates GROUP BY day`
-}
-
 func (u User) TotalMonthTimeTacked() string {
 	var total []float64
-	err := utils.ORM.Raw(`
-		select sum(count) from (
-			`+u.timeTrackedChartSQL(u.curMonthTimeRecordsSQL())+`
-		) as totals`).Pluck("sum", &total).Error
+
+	err := utils.ORM.Table("time_trackeds").
+		Where("(date_trunc('day', created_at) <= date_trunc('month', now()) + INTERVAL '1 Month - 1 Day')").
+		Where("date_trunc('month', now()) <= date_trunc('day', created_at)").
+		Pluck("round(sum(duration) / 3600,1)", &total).Error
+
 	if err != nil {
 		utils.Log.Error("failed to get time tracked month total: %v", err)
 		return "0"
@@ -146,10 +116,10 @@ func (u User) TotalMonthTimeTacked() string {
 
 func (u User) TotalYearTimeTacked() string {
 	var total []float64
-	err := utils.ORM.Raw(`
-		select sum(count) from (
-			`+u.timeTrackedChartSQL(u.curYearTimeRecordsSQL())+`
-		) as totals`).Pluck("sum", &total).Error
+	err := utils.ORM.Table("time_trackeds").
+		Where("(date_trunc('day', created_at) <= date_trunc('year', now()) + INTERVAL '1 year - 1 Day')").
+		Where("date_trunc('year', now()) <= date_trunc('day', created_at)").
+		Pluck("round(sum(duration) / 3600,1)", &total).Error
 	if err != nil {
 		utils.Log.Error("failed to get time tracked month total: %v", err)
 		return "0"
@@ -160,7 +130,22 @@ func (u User) TotalYearTimeTacked() string {
 
 func (u User) TimeTrackedChartData() string {
 	var count []float64
-	err := utils.ORM.Raw(u.timeTrackedChartSQL(u.curMonthTimeRecordsSQL())).Pluck("count", &count).Error
+	err := utils.ORM.TimeSeries(gormseries.Last7Days).Table("time_trackeds").Group("day").
+		Pluck("round(sum(coalesce(duration,0)) / 3600, 1)", &count).Error
+
+	if err != nil {
+		utils.Log.Error("Failed to get time tracked chart data! %v", err)
+		return "[]"
+	}
+
+	lst := fmt.Sprint(count)
+	return strings.Replace(lst, " ", ",", -1)
+}
+
+func (u User) NumHeartbeatsChartData() string {
+	var count []float64
+	err := utils.ORM.TimeSeries(gormseries.Last7Days, "day = time").Table("heartbeats").Group("day").
+		Pluck("count(*)-1", &count).Error
 
 	if err != nil {
 		utils.Log.Error("Failed to get time tracked chart data! %v", err)
